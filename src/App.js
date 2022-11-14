@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import { useState } from "react";
+import Sidebar from "./Component/Sidebar/Sidebar";
+import "leaflet/dist/leaflet.css";
+import Map from "./Component/Map";
 
-function App() {
+export default function App() {
+  const [layer, setLayer] = useState([]);
+  const [addLayer, setAdd] = useState({});
+  const [basemap, setBase] = useState(0);
+  const populateLayers = (data) => {
+    layer.push(data);
+    setLayer((l) => [...layer]);
+    console.log(layer);
+    setAdd(data);
+    console.log(addLayer);
+  };
+
+  const toogleBasemap = (basemap) => {
+    console.log(basemap);
+    setBase(basemap);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <div className="sidebar">
+        <Sidebar
+          populateLayers={populateLayers}
+          tooglebasemap={toogleBasemap}
+        />{" "}
+      </div>
+      <Map addLayer={layer} basemap={basemap} />
     </div>
   );
 }
-
-export default App;
