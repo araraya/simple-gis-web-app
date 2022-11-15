@@ -52,11 +52,54 @@ function Poly({ layer }) {
   return <Polygon positions={coordinates} />;
 }
 
-export default function Map({ addLayer }) {
+export default function Map({ addLayer, populateLayer }) {
   console.log(addLayer);
   const layers = addLayer;
   const _onCreated = (e) => {
     console.log(e);
+
+    let layerType = e.layerType;
+    let _coordinates = e.layer._latlng;
+    let _name = "";
+    if (
+      layerType === "marker" ||
+      layerType === "circle" ||
+      layerType === "circlemarker"
+    ) {
+      layerType = "Point";
+      _coordinates = [e.layer._latlng.lng, e.layer._latlng.lat];
+      _name = "new " + layerType;
+    }
+    if (layerType === "polyline") {
+      layerType = "LineString";
+      _coordinates = e.layer._latlngs.map((e) => {
+        return [e.lng, e.lat];
+      });
+      _name = "new " + layerType;
+    }
+    if (layerType === "polygon") {
+      layerType = "Polygon";
+      _coordinates = [];
+      e.layer._latlngs.forEach((e) => {
+        e.forEach((ev) => {
+          const getCoord = [ev.lng, ev.lat];
+          _coordinates.push(getCoord);
+        });
+      });
+      _name = "new " + layerType;
+    }
+
+    const geoJson = {
+      type: "Feature",
+      geometry: {
+        type: layerType,
+        coordinates: _coordinates,
+      },
+      properties: {
+        name: _name,
+      },
+    };
+    console.log(geoJson);
   };
 
   return (
