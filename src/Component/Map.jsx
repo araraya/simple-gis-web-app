@@ -1,28 +1,29 @@
-import React, { useState } from "react";
+import React from "react";
+import "leaflet/dist/leaflet.css";
+import "leaflet-draw/dist/leaflet.draw.css";
+
 import L from "leaflet";
 import {
   MapContainer,
   TileLayer,
   Marker,
-  Popup,
-  CircleMarker,
   Polyline,
   Polygon,
   LayersControl,
+  FeatureGroup,
 } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
+import { EditControl } from "react-leaflet-draw";
 
-import icon from "leaflet/dist/images/marker-icon.png";
-import iconShadow from "leaflet/dist/images/marker-shadow.png";
-
-let DefaultIcon = L.icon({
-  iconUrl: icon,
-  shadowUrl: iconShadow,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0/images/marker-icon.png",
+  iconUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0/images/marker-icon.png",
+  shadowUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0/images/marker-shadow.png",
 });
 
-L.Marker.prototype.options.icon = DefaultIcon;
 const { BaseLayer } = LayersControl;
 
 function Point({ layer }) {
@@ -51,19 +52,12 @@ function Poly({ layer }) {
   return <Polygon positions={coordinates} />;
 }
 
-function Basemap({ basemapUrl }) {
-  return <TileLayer url={basemapUrl} />;
-}
-
-export default function Map({ addLayer, basemap }) {
+export default function Map({ addLayer }) {
   console.log(addLayer);
   const layers = addLayer;
-  const basemapUrl = [
-    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    "http://mt0.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z}",
-  ];
-  const [activeBasemap, setActiveBasemap] = useState(0);
-  const [basemapIdx, setBasemap] = useState(basemapUrl[activeBasemap]);
+  const _onCreated = (e) => {
+    console.log(e);
+  };
 
   return (
     <MapContainer
@@ -72,10 +66,6 @@ export default function Map({ addLayer, basemap }) {
       scrollWheelZoom={true}
       style={{ height: "100vh" }}
     >
-      {/* <Basemap basemapUrl={basemapIdx} /> */}
-      {/* <TileLayer url={basemapUrl[0]} /> */}
-      {/* http://mt0.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z} */}
-      {/* <Layer addLayer={addLayer} /> */}
       <LayersControl>
         <BaseLayer checked name="OSM">
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
@@ -84,7 +74,6 @@ export default function Map({ addLayer, basemap }) {
           <TileLayer url="http://mt0.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z}" />
         </BaseLayer>
       </LayersControl>
-
       {layers.map((l, i) => {
         if (l.type === "Feature") {
           if (l.geometry.type === "Point") {
@@ -98,6 +87,18 @@ export default function Map({ addLayer, basemap }) {
           }
         }
       })}
+
+      <FeatureGroup>
+        <EditControl
+          position="topright"
+          // onEdited={this._onEditPath}
+          onCreated={_onCreated}
+          // onDeleted={this._onDeleted}
+          draw={{
+            rectangle: false,
+          }}
+        />
+      </FeatureGroup>
     </MapContainer>
   );
 }

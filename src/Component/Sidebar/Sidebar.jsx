@@ -10,7 +10,7 @@ function Accordion({ collapse }) {
   }
 }
 
-function LayerList({ layers, collapse }) {
+function LayerList({ layers }) {
   return (
     <div className="pl-2 pb-0">
       <ul>
@@ -27,7 +27,7 @@ function LayerList({ layers, collapse }) {
   );
 }
 
-function Sidebar({ populateLayers, tooglebasemap }) {
+function Sidebar({ populateLayers }) {
   const [collapse, setCollapse] = useState(false);
 
   function toogleCollapse() {
@@ -38,24 +38,15 @@ function Sidebar({ populateLayers, tooglebasemap }) {
     }
   }
 
-  const toogleBasemap = (event) => {
-    console.log(event.target.value);
-    tooglebasemap(event.target.value);
-  };
-
-  const layersArray = [];
   const [layers, setLayers] = useState([]);
 
   const pushLayer = (e) => {
     const fileReader = new FileReader();
     fileReader.readAsText(e.target.files[0], "UTF-8");
     fileReader.onload = (e) => {
-      // setLayers(e.target.result);
       const feature = JSON.parse(e.target.result);
-      layersArray.push(feature);
       layers.push(feature);
       setLayers((l) => [...layers]);
-      console.log(layersArray);
       console.log(layers);
       populateLayers(feature);
       setCollapse(true);
@@ -66,7 +57,7 @@ function Sidebar({ populateLayers, tooglebasemap }) {
     <>
       <div className="pt-2 pb-2 m-0">
         <h2>
-          <i>Ray Maps</i>
+          <i>R Maps</i>
         </h2>
       </div>
       <div className="input-group input-group-sm">
@@ -86,11 +77,7 @@ function Sidebar({ populateLayers, tooglebasemap }) {
           </a>
           &nbsp;Layers
         </span>
-        <span className="upload-button">
-          {/* <button onClick={pushLayer} className="btn btn-outline-dark">
-          <i class="bi bi-cloud-upload-fill"></i>
-        </button> */}
-        </span>
+        <span className="upload-button"></span>
       </div>
       {collapse && layers.length > 0 && <LayerList layers={layers} />}
       <hr />
