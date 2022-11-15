@@ -16,7 +16,7 @@ export default function App() {
   return (
     <div>
       <div className="sidebar">
-        <Sidebar populateLayers={populateLayers} />{" "}
+        <Sidebar populateLayers={populateLayers} layerArray={layer} />{" "}
       </div>
       <Map addLayer={layer} populateLayers={populateLayers} />
     </div>

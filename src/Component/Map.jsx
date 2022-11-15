@@ -52,8 +52,8 @@ function Poly({ layer }) {
   return <Polygon positions={coordinates} />;
 }
 
-export default function Map({ addLayer, populateLayer }) {
-  console.log(addLayer);
+export default function Map({ addLayer, populateLayers }) {
+  // console.log(addLayer);
   const layers = addLayer;
   const _onCreated = (e) => {
     console.log(e);
@@ -81,10 +81,12 @@ export default function Map({ addLayer, populateLayer }) {
       layerType = "Polygon";
       _coordinates = [];
       e.layer._latlngs.forEach((e) => {
+        const _coord = [];
         e.forEach((ev) => {
           const getCoord = [ev.lng, ev.lat];
-          _coordinates.push(getCoord);
+          _coord.push(getCoord);
         });
+        _coordinates.push(_coord);
       });
       _name = "new " + layerType;
     }
@@ -97,9 +99,11 @@ export default function Map({ addLayer, populateLayer }) {
       },
       properties: {
         name: _name,
+        shapeFromMap: true,
       },
     };
     console.log(geoJson);
+    populateLayers(geoJson);
   };
 
   return (
@@ -119,18 +123,19 @@ export default function Map({ addLayer, populateLayer }) {
       </LayersControl>
       {layers.map((l, i) => {
         if (l.type === "Feature") {
-          if (l.geometry.type === "Point") {
-            return <Point key={i} layer={l} />;
-          }
-          if (l.geometry.type === "LineString") {
-            return <Line key={i} layer={l} />;
-          }
-          if (l.geometry.type === "Polygon") {
-            return <Poly key={i} layer={l} />;
+          if (!l.properties.shapeFromMap) {
+            if (l.geometry.type === "Point") {
+              return <Point key={i} layer={l} />;
+            }
+            if (l.geometry.type === "LineString") {
+              return <Line key={i} layer={l} />;
+            }
+            if (l.geometry.type === "Polygon") {
+              return <Poly key={i} layer={l} />;
+            }
           }
         }
       })}
-
       <FeatureGroup>
         <EditControl
           position="topright"

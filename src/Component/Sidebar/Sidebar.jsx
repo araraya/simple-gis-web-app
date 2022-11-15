@@ -27,7 +27,7 @@ function LayerList({ layers }) {
   );
 }
 
-function Sidebar({ populateLayers }) {
+function Sidebar({ populateLayers, layerArray }) {
   const [collapse, setCollapse] = useState(false);
 
   function toogleCollapse() {
@@ -47,12 +47,12 @@ function Sidebar({ populateLayers }) {
       const feature = JSON.parse(e.target.result);
       layers.push(feature);
       setLayers((l) => [...layers]);
-      console.log(layers);
+      // console.log(layers);
       populateLayers(feature);
       setCollapse(true);
     };
   };
-
+  console.log(layerArray);
   return (
     <>
       <div className="pt-2 pb-2 m-0">
@@ -79,7 +79,7 @@ function Sidebar({ populateLayers }) {
         </span>
         <span className="upload-button"></span>
       </div>
-      {collapse && layers.length > 0 && <LayerList layers={layers} />}
+      {collapse && layerArray.length > 0 && <LayerList layers={layerArray} />}
       <hr />
     </>
   );
