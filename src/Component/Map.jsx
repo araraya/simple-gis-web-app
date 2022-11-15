@@ -13,6 +13,7 @@ import {
   FeatureGroup,
 } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
+import Edit from "./EditControl";
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -55,56 +56,6 @@ function Poly({ layer }) {
 export default function Map({ addLayer, populateLayers }) {
   // console.log(addLayer);
   const layers = addLayer;
-  const _onCreated = (e) => {
-    console.log(e);
-
-    let layerType = e.layerType;
-    let _coordinates = e.layer._latlng;
-    let _name = "";
-    if (
-      layerType === "marker" ||
-      layerType === "circle" ||
-      layerType === "circlemarker"
-    ) {
-      layerType = "Point";
-      _coordinates = [e.layer._latlng.lng, e.layer._latlng.lat];
-      _name = "new " + layerType;
-    }
-    if (layerType === "polyline") {
-      layerType = "LineString";
-      _coordinates = e.layer._latlngs.map((e) => {
-        return [e.lng, e.lat];
-      });
-      _name = "new " + layerType;
-    }
-    if (layerType === "polygon") {
-      layerType = "Polygon";
-      _coordinates = [];
-      e.layer._latlngs.forEach((e) => {
-        const _coord = [];
-        e.forEach((ev) => {
-          const getCoord = [ev.lng, ev.lat];
-          _coord.push(getCoord);
-        });
-        _coordinates.push(_coord);
-      });
-      _name = "new " + layerType;
-    }
-
-    const geoJson = {
-      type: "Feature",
-      geometry: {
-        type: layerType,
-        coordinates: _coordinates,
-      },
-      properties: {
-        name: _name,
-        shapeFromMap: true,
-      },
-    };
-    console.log(geoJson);
-    populateLayers(geoJson);
-  };
 
   return (
     <MapContainer
@@ -136,17 +87,7 @@ export default function Map({ addLayer, populateLayers }) {
           }
         }
       })}
-      <FeatureGroup>
-        <EditControl
-          position="topright"
-          // onEdited={this._onEditPath}
-          onCreated={_onCreated}
-          // onDeleted={this._onDeleted}
-          draw={{
-            rectangle: false,
-          }}
-        />
-      </FeatureGroup>
+      <Edit populateLayers={populateLayers} />
     </MapContainer>
   );
 }

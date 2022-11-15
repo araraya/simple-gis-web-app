@@ -57,7 +57,7 @@ function Sidebar({ populateLayers, layerArray }) {
     <>
       <div className="pt-2 pb-2 m-0">
         <h2>
-          <i>R Maps</i>
+          <i>Rays Maps</i>
         </h2>
       </div>
       <div className="input-group input-group-sm">
