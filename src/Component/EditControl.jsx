@@ -4,8 +4,6 @@ import { EditControl } from "react-leaflet-draw";
 
 function Edit({ populateLayers }) {
   const _onCreated = (e) => {
-    console.log(e);
-
     let layerType = e.layerType;
     let _coordinates = e.layer._latlng;
     let _name = "";
@@ -50,15 +48,14 @@ function Edit({ populateLayers }) {
         shapeFromMap: true,
       },
     };
-    console.log(geoJson);
     populateLayers(geoJson);
   };
-
+  const _onEdited = (e) => {};
   return (
     <FeatureGroup>
       <EditControl
         position="topright"
-        // onEdited={this._onEditPath}
+        onEdited={_onEdited}
         onCreated={_onCreated}
         // onDeleted={this._onDeleted}
         draw={{

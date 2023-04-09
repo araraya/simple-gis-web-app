@@ -47,17 +47,15 @@ function Sidebar({ populateLayers, layerArray }) {
       const feature = JSON.parse(e.target.result);
       layers.push(feature);
       setLayers((l) => [...layers]);
-      // console.log(layers);
       populateLayers(feature);
       setCollapse(true);
     };
   };
-  console.log(layerArray);
   return (
     <>
       <div className="pt-2 pb-2 m-0">
         <h2>
-          <i>Rays Maps</i>
+          <i>Rays Maps Test</i>
         </h2>
       </div>
       <div className="input-group input-group-sm">

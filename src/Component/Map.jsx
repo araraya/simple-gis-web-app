@@ -10,9 +10,7 @@ import {
   Polyline,
   Polygon,
   LayersControl,
-  FeatureGroup,
 } from "react-leaflet";
-import { EditControl } from "react-leaflet-draw";
 import Edit from "./EditControl";
 
 delete L.Icon.Default.prototype._getIconUrl;
@@ -54,7 +52,6 @@ function Poly({ layer }) {
 }
 
 export default function Map({ addLayer, populateLayers }) {
-  // console.log(addLayer);
   const layers = addLayer;
 
   return (

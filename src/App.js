@@ -10,7 +10,6 @@ export default function App() {
   const populateLayers = (data) => {
     layer.push(data);
     setLayer((l) => [...layer]);
-    console.log(layer);
   };
 
   return (
